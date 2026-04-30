@@ -1,0 +1,44 @@
+[project]
+name = "garment-service"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.29",
+    "pydantic-settings>=2.0",
+    "pyyaml>=6.0",
+    "numpy<2",
+    "scipy",
+    "svgwrite",
+    "svgpathtools",
+    "CairoSVG",
+    "trimesh",
+    "pyrender",
+    "libigl",
+    "cgal",
+    "psutil",
+    "matplotlib",
+    "Pillow",
+]
+
+[project.optional-dependencies]
+# Simulation (Phase 2) requires a custom NVIDIA Warp fork — NOT standard warp-lang.
+# Install manually:
+#   git clone https://github.com/maria-korosteleva/NvidiaWarp-GarmentCode
+#   pip install -e /path/to/NvidiaWarp-GarmentCode
+sim = []
+
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "pygarment*", "assets*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
