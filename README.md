@@ -7,8 +7,9 @@ A clean FastAPI backend for parametric sewing pattern generation and physics-bas
 ## What it does
 
 **Phase 1 (active):** Accept a JSON description of a garment's design parameters and return:
-- An SVG sewing pattern ready to display or print
-- A structured specification JSON describing every panel, edge, and stitch
+- A structured specification JSON describing every 3D panel, curved edge, and stitch
+- A full interactive 3D visualization via the Next.js frontend, directly mapping 2D panels to 3D space
+- An SVG sewing pattern ready to display or print (for backward compatibility)
 
 **Phase 2 (planned):** Queue a physics draping simulation using the same input and return:
 - A GLB 3D mesh of the draped garment
@@ -23,6 +24,7 @@ A clean FastAPI backend for parametric sewing pattern generation and physics-bas
 | Python | 3.9+ | Tested on 3.9 (conda `garmentcode` env) |
 | conda | any | Recommended over venv for native dependency management |
 | Homebrew | macOS only | `brew install cairo` needed for SVG rendering |
+| Node.js | 18+ | Required for the Next.js frontend visualizer |
 
 All Python packages listed in `pyproject.toml` must be installed in the same environment as the GarmentCode dependencies (`numpy`, `scipy`, `cgal`, `libigl`, `pyrender`, `CairoSVG`, etc.).
 
@@ -80,6 +82,18 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 The service must be started from the project root (`garment-service/`) so that relative asset paths resolve correctly.
 
 Interactive API docs are available at `http://localhost:8000/docs`.
+
+### 5. Start the frontend 3D visualizer
+
+In a new terminal window:
+
+```bash
+cd /path/to/Documents/garment-service/frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000` to interact with the 3D Garment Visualizer.
 
 ---
 
@@ -229,6 +243,7 @@ garment-service/
 │   └── pipeline/
 │       ├── pattern.py   # Phase 1: design dict → SVG + spec JSON
 │       └── sim.py       # Phase 2: BoxMesh + Warp → GLB (stub)
+├── frontend/            # Next.js App Router 3D Visualizer (React Three Fiber)
 ├── pygarment/           # Core DSL + mesh gen + simulation (copied from GarmentCode)
 ├── assets/
 │   ├── garment_programs/  # 14 Python files defining all garment types

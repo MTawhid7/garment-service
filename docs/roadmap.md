@@ -10,6 +10,7 @@ This document tracks what has been built, what is planned, and the reasoning beh
 
 **Delivered:**
 - `POST /generate` — synchronous, < 1 second, returns SVG + specification JSON
+- **3D Frontend Visualizer** — Next.js/Three.js interactive web app showing real-time panel mapping over a 3D body
 - `GET /schema` — full design parameter schema from `default.yaml`
 - `GET /garment-types` — available garment class names per slot
 - `GET /` — health check

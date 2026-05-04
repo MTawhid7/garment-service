@@ -45,3 +45,8 @@ pygarment/pattern/cairo_dlls/*.dll
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Next.js
+frontend/.next/
+frontend/node_modules/
+frontend/out/

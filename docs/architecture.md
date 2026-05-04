@@ -16,7 +16,11 @@ POST /generate  ─────────────────────�
   │   app/pipeline/pattern.py
   │   MetaGarment.assembly() → VisPattern → SVG + spec JSON
   │
-  ▼ (Phase 2)
+  ▼ (Frontend 3D Visualizer)
+  │   frontend/src/lib/panelGeometry.ts
+  │   JSON → curve tessellation → earcut triangulation → React Three Fiber
+  │
+  ▼ (Phase 2 - Simulation)
 POST /simulate  ──────────────────────────────────── returns job_id immediately
   │   app/main.py  asyncio.Queue → background worker
   │   app/pipeline/sim.py
@@ -46,6 +50,15 @@ garment-service/
 │       │                           → SVG + specification JSON
 │       └── sim.py                Phase 2 pipeline (stub):
 │                                   spec JSON → BoxMesh → Warp → GLB
+│
+├── frontend/                     Next.js 3D Visualizer (React Three Fiber)
+│   ├── src/app/                  Next.js App Router (page layout)
+│   ├── src/components/           UI controls & GarmentViewer 3D scene
+│   ├── src/hooks/                State machine for fetching/generating
+│   ├── src/services/             API layer (calls FastAPI backend)
+│   └── src/lib/                  Pure math geometry pipeline:
+│       ├── edgeTessellator.ts    Curves → polyline vertices
+│       └── panelGeometry.ts      earcut + Maya XYZ Euler → 3D mesh
 │
 ├── pygarment/                    Core library (copied from GarmentCode)
 │   ├── garmentcode/              Pattern DSL
@@ -153,6 +166,16 @@ Renders panel outlines as an SVG. Stitch information is not included in the SVG 
   "properties":  { "units_in_meter": 100, "curvature_coords": "relative" }
 }
 ```
+
+### Step 6 — Frontend 3D rendering
+`frontend/src/lib/panelGeometry.ts`
+
+The Next.js app consumes the specification JSON directly:
+1. **Edge Tessellation:** Converts relative cubic/quadratic Beziers and SVG arcs into dense polyline points.
+2. **Triangulation:** Uses `earcut` to convert the 2D panel outline into triangle indices.
+3. **3D Transform:** Applies the Maya intrinsic XYZ Euler rotation and translation metadata to position panels around the 3D body.
+4. **Scale:** Converts coordinates from cm to meters (Three.js standard).
+5. **Render:** Hands the resulting `Float32Array` buffers to `React Three Fiber` for real-time visualization over the `mean_all.obj` body mesh.
 
 ---
 

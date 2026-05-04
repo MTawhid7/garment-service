@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 import pygarment as pyg
@@ -70,6 +71,17 @@ app = FastAPI(
 
 # Serve simulation outputs as static files (Phase 2).
 app.mount("/outputs", StaticFiles(directory=str(settings.output_dir), check_dir=False), name="outputs")
+
+# Serve body OBJ / YAML files for Three.js to load.
+app.mount("/bodies", StaticFiles(directory=str(settings.body_path.parent)), name="bodies")
+
+# CORS — allow the Next.js dev server and same-host production.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:8000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ── Phase 1: Pattern generation ───────────────────────────────────────────────

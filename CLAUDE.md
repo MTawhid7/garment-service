@@ -8,7 +8,7 @@ This file is read by Claude Code at the start of every session. It captures deci
 
 A standalone FastAPI service for parametric garment pattern generation and (planned) physics simulation. It is a clean extraction of the essential pipeline from the upstream [GarmentCode](https://github.com/maria-korosteleva/GarmentCode) research repository.
 
-- **Phase 1** (complete): `POST /generate` → SVG + specification JSON, < 1 second
+- **Phase 1** (complete): `POST /generate` → specification JSON, rendered in full 3D via a Next.js frontend app.
 - **Phase 2** (stub): `POST /simulate` → async job → GLB 3D mesh + PNGs
 
 ---
@@ -18,13 +18,19 @@ A standalone FastAPI service for parametric garment pattern generation and (plan
 Always run from the project root. The conda env is `garmentcode`.
 
 ```bash
+# Terminal 1: Backend
 cd /Users/tawhid/Documents/garment-service
 conda activate garmentcode
 export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"   # macOS only
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+# Terminal 2: Frontend
+cd /Users/tawhid/Documents/garment-service/frontend
+npm run dev
 ```
 
-Interactive docs: `http://localhost:8000/docs`
+Interactive API docs: `http://localhost:8000/docs`
+Frontend app: `http://localhost:3000`
 
 ---
 
@@ -37,6 +43,8 @@ Interactive docs: `http://localhost:8000/docs`
 | `app/config.py` | Pydantic Settings — paths configured via env vars |
 | `app/pipeline/pattern.py` | Pattern generation: merge overrides → MetaGarment → SVG + spec |
 | `app/pipeline/sim.py` | Simulation stub: raises NotImplementedError until Phase 2 |
+| `frontend/` | Next.js 3D visualizer using React Three Fiber |
+| `frontend/src/lib/` | Pure math: Edge tessellation & CGAL/Maya-equivalent 3D Euler transforms |
 | `assets/garment_programs/meta_garment.py` | Entry point for garment assembly |
 | `assets/design_params/default.yaml` | Full parameter schema and defaults |
 | `pygarment/` | DSL core, mesh generation, simulation engine (copied from GarmentCode) |

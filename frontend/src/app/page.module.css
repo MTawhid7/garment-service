@@ -1,0 +1,33 @@
+.main {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.viewerWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.errorBanner {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(240, 80, 80, 0.15);
+  border: 1px solid rgba(240, 80, 80, 0.35);
+  color: #f09090;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  max-width: 90%;
+  pointer-events: none;
+}
